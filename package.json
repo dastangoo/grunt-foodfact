@@ -27,5 +27,8 @@
   },
   "scripts": {
     "test": "grunt test"
+  },
+  "dependencies": {
+    "request": "^2.69.0"
   }
 }
