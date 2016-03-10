@@ -1,16 +1,26 @@
 module.exports = function (grunt) {
 
-  grunt.registerMultiTask('foodfact', "Load the foodfact database", function(p1, p2){
+  grunt.registerMultiTask('foodfact', "Load the foodfact database", function(){
 
     var options = this.options({
-      urls : []
+      download : false
     });
-    grunt.log.writeln('Loading the database...');
 
-    grunt.log.debug('urls', options.urls);
+    var urls = this.data.urls || [];
 
-    grunt.log.ok('Database loaded');
+    grunt.log.debug('Task   : ' + this.name);
+    grunt.log.debug('Target : ' + this.target);
+    grunt.log.debug('URLs   : ', urls);
 
+    if(options.download){
+      grunt.log.debug('Downloading database');
+    }
+
+    this.files.forEach(function(file){
+
+      grunt.log.debug('Destination : ' + file.dest);
+      grunt.log.debug('Sources : ', file.src);
+
+    });
   });
-
 };
