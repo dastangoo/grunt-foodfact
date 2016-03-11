@@ -1,26 +1,22 @@
-module.exports = function (grunt) {
+var path = require('path');
 
-  grunt.registerMultiTask('foodfact', "Load the foodfact database", function(){
+var parse = require('../lib/parse.js');
 
-    var options = this.options({
-      download : false
-    });
+module.exports = function(grunt) {
 
-    var urls = this.data.urls || [];
+  grunt.registerMultiTask('foodfact', "Load the foodfact database", function() {
 
-    grunt.log.debug('Task   : ' + this.name);
-    grunt.log.debug('Target : ' + this.target);
-    grunt.log.debug('URLs   : ', urls);
+    this.files.forEach(function(file) {
 
-    if(options.download){
-      grunt.log.debug('Downloading database');
-    }
-
-    this.files.forEach(function(file){
-
+      var destDir = path.dirname(file.dest);
       grunt.log.debug('Destination : ' + file.dest);
       grunt.log.debug('Sources : ', file.src);
+
+      if (!grunt.file.exits(destDir)) {
+        grunt.file.mkdir(destDir);
+      }
 
     });
   });
 };
+
