@@ -22,10 +22,6 @@ module.exports = function(grunt) {
             if (!grunt.file.exists(destDir)) {
                 grunt.file.mkdir(destDir);
             }
-
-            if (!grunt.file.exists(destDir)) {
-                grunt.fail.warn('Unable to create ' + path.resolve(destDir));
-            }
             return destDir;
         };
 
@@ -33,9 +29,15 @@ module.exports = function(grunt) {
         var convert = function convert(source, destination, cb){
             grunt.verbose.writeln('Convert %s to %s', source, destination);
 
-            grunt.log.debug('CSV parsing using %j', options.delimiter);
+            grunt.event.emit('convert.foodfact', source, destination);
+            parse(source, destination, { delimiter : options.delimiter }, function(err){
+                if(err){
+                    return cb(err);
+                }
 
-            parse(source, destination, { delimiter : options.delimiter }, cb);
+                grunt.event.emit('converted.foodfact', source, destination);
+                cb();
+            });
         };
 
         if(options.download){
