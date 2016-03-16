@@ -1,38 +1,61 @@
 var path = require('path');
-
+var async = require('async');
+var download = require('../lib/download.js');
 var parse = require('../lib/parse.js');
 
 module.exports = function(grunt) {
 
-  grunt.registerMultiTask('foodfact', "Load the foodfact database", function() {
+    grunt.registerMultiTask('foodfact', 'Load the foodfact database', function() {
 
-    var done = this.async();
+        var stack   = [];
+        var done    = this.async();
+        var options = this.options({ download : true });
+        var urls    = this.data.urls || options.urls;
 
+        //extract destination dir and create it
+        var prepareDestDir = function prepareDestDir(destinationFile){
+            var destDir = path.dirname(destinationFile);
 
-    this.files.forEach(function(file) {
+            if (!grunt.file.exists(destDir)) {
+                grunt.file.mkdir(destDir);
+            }
+            return destDir;
+        };
 
-      var destDir = path.dirname(file.dest);
-      var source  = file.src[0];
+        //run the file parsing/convertion
+        var convert = function convert(source, destination, cb){
+            parse(source, destination, { delimiter : '\t' }, cb);
+        };
 
-      grunt.log.debug('Destination : ' + file.dest);
-      grunt.log.debug('Sources : ', file.src);
+        if(options.download){
+            //download then the files are not expanded
+            stack = this.data.files.map(function(filePattern, dest) {
+                var destDir = prepareDestDir(dest);
 
-      if (!grunt.file.exists(destDir)) {
-        grunt.file.mkdir(destDir);
-      }
-
-      parse(file.src[0], {}, function(err, data){
-        if(err){
-          throw err;
+                return function (cb){
+                    download(urls, destDir, function(err){
+                        if(err){
+                            return cb(err);
+                        }
+                        grunt.file.expand(filePattern).forEach(function(source){
+                            convert(source, dest, cb);
+                        });
+                    });
+                };
+            });
+        } else {
+            stack = this.files.map(function(file){
+                prepareDestDir(file.dest);
+                return function (cb){
+                    file.src.forEach(function(source){
+                        convert(source, file.dest, cb);
+                    });
+                };
+            });
         }
 
-        grunt.log.debug(data);
-        grunt.file.write(file.dest, data);
-
-        done();
-      });
-
+        //run the stack function in parrallel
+        async.parallel(stack, done);
     });
-  });
 };
 

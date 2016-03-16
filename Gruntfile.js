@@ -6,56 +6,77 @@
  * Licensed under the MIT license.
  */
 
-'use strict';
+module.exports = function(grunt) {
 
-module.exports = function (grunt) {
-  // load all npm grunt tasks
-  require('load-grunt-tasks')(grunt);
+    grunt.initConfig({
 
-  // Project configuration.
-  grunt.initConfig({
-    jshint: {
-      all: [
-        'Gruntfile.js',
-        'tasks/*.js',
-        '<%= nodeunit.tests %>'
-      ],
-      options: {
-        jshintrc: '.jshintrc',
-        reporter: require('jshint-stylish')
-      }
-    },
 
-    // Before generating any new files, remove any previously-created files.
-    clean: {
-      tests: ['tmp']
-    },
+        eslint: {
+            all: [
+                'Gruntfile.js',
+                'tasks/*.js',
+                'lib/*.js'
+            ]
+        },
 
-    // Configuration to be run (and then tested).
-    foodfact: {
-        options: {
-          'urls': [
-            'http://world.openfoodfacts.org/data/data-fields.txt',
-            'http://world.openfoodfacts.org/data/en.openfoodfacts.org.products.csv'
-          ]
+
+        // Configuration to be run (and then tested).
+        foodfact: {
+            options: {
+                urls: [
+                    'http://world.openfoodfacts.org/data/data-fields.txt',
+                    'http://world.openfoodfacts.org/data/en.openfoodfacts.org.products.csv'
+                ]
+            }
+        },
+
+        clean : {
+            options: {
+                force : true
+            },
+            test: ['test/data/out/*']
+        },
+
+        connect: {
+            test: {
+                options : {
+                    hostname: 'localhost',
+                    port: 4422,
+                    base: 'test'
+                }
+            }
+        },
+
+        mochaTest: {
+            test: {
+                options: {
+                    reporter: 'spec'
+                },
+                src: ['test/**/*_spec.js']
+            }
+        },
+
+        watch : {
+            test: {
+                files : ['lib/*.js', 'tasks/*.js', 'test/**/*_spec.js'],
+                tasks:  ['test']
+            }
         }
-    },
 
-    // Unit tests.
-    nodeunit: {
-      tests: ['test/*_test.js']
-    }
 
-  });
+    });
 
-  // Actually load this plugin's task(s).
-  grunt.loadTasks('tasks');
+    grunt.loadNpmTasks('grunt-eslint');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-mocha-test');
 
-  // Whenever the "test" task is run, first clean the "tmp" dir, then run this
-  // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'foodfact', 'nodeunit']);
+    grunt.loadTasks('tasks');
 
-  // By default, lint and run all tests.
-  grunt.registerTask('default', ['jshint', 'test']);
+    grunt.registerTask('test', ['clean:test', 'mochaTest:test']);
+    grunt.registerTask('devtest', ['clean:test', 'connect:test', 'watch:test']);
+
 
 };
+
