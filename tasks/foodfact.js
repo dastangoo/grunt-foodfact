@@ -9,7 +9,10 @@ module.exports = function(grunt) {
 
         var stack   = [];
         var done    = this.async();
-        var options = this.options({ download : true });
+        var options = this.options({
+            download : true,
+            delimiter : 't'
+        });
         var urls    = this.data.urls || options.urls;
 
         //extract destination dir and create it
@@ -19,12 +22,20 @@ module.exports = function(grunt) {
             if (!grunt.file.exists(destDir)) {
                 grunt.file.mkdir(destDir);
             }
+
+            if (!grunt.file.exists(destDir)) {
+                grunt.fail.warn('Unable to create ' + path.resolve(destDir));
+            }
             return destDir;
         };
 
         //run the file parsing/convertion
         var convert = function convert(source, destination, cb){
-            parse(source, destination, { delimiter : '\t' }, cb);
+            grunt.verbose.writeln('Convert %s to %s', source, destination);
+
+            grunt.log.debug('CSV parsing using %j', options.delimiter);
+
+            parse(source, destination, { delimiter : options.delimiter }, cb);
         };
 
         if(options.download){
@@ -55,7 +66,13 @@ module.exports = function(grunt) {
         }
 
         //run the stack function in parrallel
-        async.parallel(stack, done);
+        async.parallel(stack, function(err){
+            if(err){
+                return done(err);
+            }
+            grunt.log.ok('%d files converted', stack.length);
+            done();
+        });
     });
 };
 
