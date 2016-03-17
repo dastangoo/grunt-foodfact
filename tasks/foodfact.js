@@ -1,7 +1,8 @@
-var path = require('path');
-var async = require('async');
+var _        = require('lodash');
+var path     = require('path');
+var async    = require('async');
 var download = require('../lib/download.js');
-var parse = require('../lib/parse.js');
+var parse    = require('../lib/parse.js');
 
 module.exports = function(grunt) {
 
@@ -42,7 +43,7 @@ module.exports = function(grunt) {
 
         if(options.download){
             //download then the files are not expanded
-            stack = this.data.files.map(function(filePattern, dest) {
+            stack = _.map(this.data.files, function(filePattern, dest) {
                 var destDir = prepareDestDir(dest);
 
                 return function (cb){

@@ -22,12 +22,21 @@ module.exports = function(grunt) {
 
         // Configuration to be run (and then tested).
         foodfact: {
-            test: {
+            testConvert: {
                 options: {
                     download: false
                 },
                 files: {
                     'test/data/out/db.json' : ['test/data/in/*.csv']
+                }
+            },
+            testFull: {
+                options: {
+                    download: true,
+                    urls : ['http://localhost:4422/data/in/products.csv']
+                },
+                files: {
+                    'test/data/out/db2.json' : ['test/data/out/products.csv']
                 }
             }
         },
@@ -50,18 +59,27 @@ module.exports = function(grunt) {
         },
 
         mochaTest: {
-            test: {
-                options: {
-                    reporter: 'spec'
-                },
-                src: ['test/**/*_spec.js']
+            options: {
+                reporter: 'spec'
+            },
+            testLib: {
+                src: ['test/lib/*_spec.js']
+            },
+            testConvert: {
+                src: ['test/tasks/convert_spec.js']
+            },
+            testFull: {
+                src: ['test/tasks/full_spec.js']
             }
         },
 
         watch : {
             test: {
                 files : ['lib/*.js', 'tasks/*.js', 'test/**/*_spec.js'],
-                tasks:  ['test']
+                tasks:  ['test'],
+                options: {
+                    debounceDelay: 2000
+                }
             }
         }
     });
@@ -74,18 +92,25 @@ module.exports = function(grunt) {
 
     grunt.loadTasks('tasks');
 
-    grunt.registerTask('test', ['clean:test', 'mochaTest:test']);
+
+
+    grunt.registerTask('testConvert', 'Foodfact conversion only test', ['clean:test', 'foodfact:testConvert', 'mochaTest:testConvert']);
+
+    //connect to be called before this one
+    grunt.registerTask('testFull', 'Foodfact full options test', ['clean:test', 'foodfact:testFull', 'mochaTest:testFull']);
+
+    //connect to be called before this one
+    grunt.registerTask('testLib', 'Libraries test', ['clean:test', 'mochaTest:testLib']);
+
+    grunt.registerTask('test', 'Run tests', [
+        'connect:test',
+        'clean:test',
+        'testConvert',
+        'testFull',
+        'testLib'
+    ]);
+
     grunt.registerTask('devtest', ['clean:test', 'connect:test', 'watch:test']);
 
-    grunt.event.on('*.foodfact', function(){
-        grunt.log.debug('Foodfact has made something');
-    });
-
-    grunt.event.on('convert', function(source){
-        grunt.log.debug('Start to convert ', source);
-    });
-    grunt.event.on('converted', function(source, destination){
-        grunt.log.debug(source + ' converted to ' + destination);
-    });
 };
 
