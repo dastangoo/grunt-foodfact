@@ -1,7 +1,7 @@
 {
   "name": "grunt-foodfact",
-  "version": "0.1.0",
-  "description": "Update the foodprint.io foodfact database.",
+  "version": "0.1.1",
+  "description": "Loads data from Open Foodfact and transform them. Demo Plugin.",
   "homepage": "https://github.com/krampstudio/grunt-foodfact",
   "repository": "git@github.com:krampstudio/grunt-foodfact.git",
   "author": {
@@ -9,14 +9,15 @@
     "email": "chevrier.bertrand@gmail.com",
     "url": "https://github.com/krampstudio"
   },
+  "license": "MIT",
   "keywords": [
-    "gruntplugin"
+    "gruntplugin",
+    "openfoodfact"
   ],
   "main": "Gruntfile.js",
   "engines": {
     "node": "0.12.0"
   },
-  "license": "MIT",
   "devDependencies": {
     "chai": "^3.5.0",
     "grunt": "~0.4.2",
@@ -26,7 +27,6 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^18.0.0",
     "grunt-mocha-test": "^0.12.7",
-    "lodash": "^4.6.1",
     "mocha": "^2.4.5"
   },
   "scripts": {
@@ -34,11 +34,7 @@
   },
   "dependencies": {
     "csvtojson": "^0.5.2",
-    "request": "^2.69.0"
-  },
-  "config": {
-    "host": "127.0.0.1",
-    "port": 4423,
-    "browser": "fxdev -no-remote"
+    "request": "^2.69.0",
+    "lodash": "^4.6.1"
   }
 }
