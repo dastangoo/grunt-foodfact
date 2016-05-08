@@ -1,10 +1,12 @@
 module.exports = function (grunt) {
 
-  grunt.registerMultiTask('foodfact', "Load the foodfact database", function(){
+  grunt.registerTask(
+      'foodfact',
+      "Load the foodfact database",
+      function(){
 
-    grunt.log.writeln('Loading the database...');
-    grunt.log.ok('Database loaded');
+        grunt.log.writeln('Loading the database...');
+        grunt.log.ok('Database loaded');
 
-  });
-
+      });
 };
