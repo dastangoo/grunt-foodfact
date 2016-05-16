@@ -4,7 +4,6 @@ module.exports = function(grunt) {
 
   grunt.registerMultiTask('foodfact', "Load the foodfact database", function() {
 
-    var done = this.async();
     var count = 0;
     var srcLength = this.filesSrc.length;
 
