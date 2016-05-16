@@ -1,5 +1,3 @@
-var path = require('path');
-
 var parse = require('../lib/parse.js');
 
 module.exports = function(grunt) {
@@ -13,8 +11,6 @@ module.exports = function(grunt) {
     grunt.log.debug(srcLength + ' files to parse');
 
     this.files.forEach(function(file) {
-
-      var destDir = path.dirname(file.dest);
 
       grunt.log.debug('Destination : ' + file.dest);
       grunt.log.debug('Sources : ', file.src);
