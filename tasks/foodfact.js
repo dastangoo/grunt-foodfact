@@ -22,19 +22,11 @@ module.exports = function(grunt) {
             if (!grunt.file.exists(destDir)) {
                 grunt.file.mkdir(destDir);
             }
-
-            if (!grunt.file.exists(destDir)) {
-                grunt.fail.warn('Unable to create ' + path.resolve(destDir));
-            }
             return destDir;
         };
 
         //run the file parsing/convertion
         var convert = function convert(source, destination, cb){
-            grunt.verbose.writeln('Convert %s to %s', source, destination);
-
-            grunt.log.debug('CSV parsing using %j', options.delimiter);
-
             parse(source, destination, { delimiter : options.delimiter }, cb);
         };
 
@@ -70,7 +62,6 @@ module.exports = function(grunt) {
             if(err){
                 return done(err);
             }
-            grunt.log.ok('%d files converted', stack.length);
             done();
         });
     });
