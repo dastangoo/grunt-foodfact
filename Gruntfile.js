@@ -77,15 +77,5 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['clean:test', 'mochaTest:test']);
     grunt.registerTask('devtest', ['clean:test', 'connect:test', 'watch:test']);
 
-    grunt.event.on('*.foodfact', function(){
-        grunt.log.debug('Foodfact has made something');
-    });
-
-    grunt.event.on('convert', function(source){
-        grunt.log.debug('Start to convert ', source);
-    });
-    grunt.event.on('converted', function(source, destination){
-        grunt.log.debug(source + ' converted to ' + destination);
-    });
 };
 
