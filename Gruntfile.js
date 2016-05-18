@@ -22,14 +22,7 @@ module.exports = function(grunt) {
 
         // Configuration to be run (and then tested).
         foodfact: {
-            test: {
-                options: {
-                    download: false
-                },
-                files: {
-                    'test/data/out/db.json' : ['test/data/in/*.csv']
-                }
-            }
+
         },
 
         clean : {
@@ -50,12 +43,6 @@ module.exports = function(grunt) {
         },
 
         mochaTest: {
-            test: {
-                options: {
-                    reporter: 'spec'
-                },
-                src: ['test/**/*_spec.js']
-            }
         },
 
         watch : {
