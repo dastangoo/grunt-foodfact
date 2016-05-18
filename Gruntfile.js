@@ -22,7 +22,6 @@ module.exports = function(grunt) {
 
         // Configuration to be run (and then tested).
         foodfact: {
-
         },
 
         clean : {
@@ -61,8 +60,20 @@ module.exports = function(grunt) {
 
     grunt.loadTasks('tasks');
 
-    grunt.registerTask('test', ['clean:test', 'mochaTest:test']);
-    grunt.registerTask('devtest', ['clean:test', 'connect:test', 'watch:test']);
+    grunt.registerTask('testConvert', 'Foodfact conversion only test', ['clean:test', 'foodfact:testConvert', 'mochaTest:testConvert']);
 
+    //connect to be called before this one
+    grunt.registerTask('testFull', 'Foodfact full options test', ['clean:test', 'foodfact:testFull', 'mochaTest:testFull']);
+
+    //connect to be called before this one
+    grunt.registerTask('testLib', 'Libraries test', ['clean:test', 'mochaTest:testLib']);
+
+    grunt.registerTask('test', 'Run tests', [
+        'connect:test',
+        'clean:test',
+        'testConvert',
+        'testFull',
+        'testLib'
+    ]);
 };
 
