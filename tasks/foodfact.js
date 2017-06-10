@@ -32,11 +32,13 @@ module.exports = function(grunt) {
         var convert = function convert(source, destination, cb){
             grunt.verbose.writeln('Convert %s to %s', source, destination);
 
+            grunt.event.emit('convert.foodfact', source, destination);
             parse(source, destination, parseOptions, function(err){
                 if(err){
                     return cb(err);
                 }
 
+                grunt.event.emit('converted.foodfact', source, destination);
                 cb();
             });
         };
@@ -78,4 +80,3 @@ module.exports = function(grunt) {
         });
     });
 };
-
