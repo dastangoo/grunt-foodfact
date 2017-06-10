@@ -22,13 +22,22 @@ module.exports = function(grunt) {
 
         // Configuration to be run (and then tested).
         foodfact: {
-            test: {
-                options: {
-                    download: false
-                },
-                files: {
-                    'test/data/out/db.json' : ['test/data/in/*.csv']
-                }
+            testConvert: {
+              options: {
+                download: false
+              },
+              files: {
+                'test/data/out/db.json': ['test/data/in/*.csv']
+              }
+            },
+            testFull: {
+              options: {
+                download: true,
+                urls: ['http://localhost:4422/data/in/products.csv']
+              },
+              files: {
+                'test/data/out/db2.json': ['test/data/in/products.csv']
+              }
             }
         },
 
@@ -39,7 +48,7 @@ module.exports = function(grunt) {
             test: ['test/data/out/*']
         },
 
-        connect: {
+         : {
             test: {
                 options : {
                     hostname: 'localhost',
@@ -50,11 +59,17 @@ module.exports = function(grunt) {
         },
 
         mochaTest: {
-            test: {
-                options: {
-                    reporter: 'spec'
-                },
-                src: ['test/**/*_spec.js']
+            options: {
+                reporter: 'spec'
+            },
+            testLib: {
+                src: ['test/lib/*_spec.js']
+            },
+            testConvert: {
+              src: ['test/tasks/convert_spec.js']
+            },
+            testFull: {
+              src: ['test/tasks/full_spec.js']
             }
         },
 
@@ -78,4 +93,3 @@ module.exports = function(grunt) {
     grunt.registerTask('devtest', ['clean:test', 'connect:test', 'watch:test']);
 
 };
-
